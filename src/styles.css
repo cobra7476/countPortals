@@ -1,3 +1,16 @@
 .mybutton{
     background-image: url('./icon.svg');
 }
+
+.countTable {
+        width: 100%;
+        
+        tr:nth-child(odd) td {
+            background-color: #102060;
+        }
+
+        .sep td {
+            height: 5px;
+            background-color: #ffe37f !important
+        }
+    }
