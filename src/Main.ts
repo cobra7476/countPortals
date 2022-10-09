@@ -1,6 +1,4 @@
 import * as Plugin from "iitcpluginkit";
-import myicon from "./icon.svg";
-
 
 class countPortals implements Plugin.Class {
 
@@ -9,6 +7,12 @@ class countPortals implements Plugin.Class {
 
         // eslint-disable-next-line unicorn/prefer-module
         require("./styles.css");
+
+        this.createButtons();
+
+    }
+
+    private createButtons():void {
         $("#toolbox").append(
             $("<a>", {
                 text: "Count",
@@ -19,9 +23,7 @@ class countPortals implements Plugin.Class {
         const toolbarGroup = $("<div>", {class: "leaflet-bar leaflet-control"})
         .append(
             $("<a>")
-                .addClass("leaflet-bar-part")
-                .css("background-image", 'url("' + myicon + '")')
-                .css("background-size", "24px")
+                .addClass("mybutton leaflet-bar-part")
                 .on("click", () => this.doCount())
 
         );
@@ -29,7 +31,7 @@ class countPortals implements Plugin.Class {
         const parent = $(".leaflet-top.leaflet-left", window.map.getContainer()).first();
         parent.append(toolbarGroup);
     }
-    
+
     private doCount(): void {
             alert("Hello World");
     }
