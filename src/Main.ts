@@ -2,16 +2,16 @@ import * as Plugin from "iitcpluginkit";
 
 const HACK_RANGE = 40;
 
-class countPortals implements Plugin.Class {
+class CountPortals implements Plugin.Class {
 
-    init() : void {
-        console.log("countPortals " + VERSION);
+    private layer?: L.LayerGroup<any>;
 
-        // eslint-disable-next-line unicorn/prefer-module
+    init(): void {
+        console.log("CountPortals " + VERSION);
+
         require("./styles.css");
 
         this.createButtons();
-
     }
 
     private createButtons():void {
@@ -60,8 +60,11 @@ class countPortals implements Plugin.Class {
         dialog({
             id: "pathPortals",
             title: "Portals on Path",
-            html: contents
+            html: contents,
+            closeCallback: () => this.onDialogClose()
         });
+
+        this.drawPortals(portals);
     }
 
     private findHackablePortals():IITC.Portal[]{
@@ -78,6 +81,33 @@ class countPortals implements Plugin.Class {
         }
 
         return result;
+    }
+
+    private drawPortals(portals: IITC.Portal[]): void {
+        if (this.layer) {
+            window.map.removeLayer(this.layer);
+        }
+
+        this.layer = new L.LayerGroup();
+        window.map.addLayer(this.layer);
+
+        portals.forEach(portal => {
+            const marker = new L.CircleMarker(portal.getLatLng(), <any>{
+                color: "red",
+                stroke: true,
+                clickable: false,  /* Leaflet 0.7*/
+                interactive: false /* Leaflet 1.0+*/
+            });
+
+            this.layer!.addLayer(marker);
+        });
+    }
+
+    onDialogClose(): void {
+        if (this.layer) {
+            window.map.removeLayer(this.layer);
+            this.layer = undefined;
+        }
     }
 
     private findNearestPoint(pos: L.LatLng): L.LatLng | undefined {
@@ -125,11 +155,12 @@ class countPortals implements Plugin.Class {
         const dy = b.lng - a.lng;
         return dx * dx + dy * dy;
     }
+    
 }
 
 /**
  * use "main" to access you main class from everywhere
  * (same as window.plugin.countPortals)
  */
-export const main = new countPortals();
+export const main = new CountPortals();
 Plugin.Register(main, "countPortals");
