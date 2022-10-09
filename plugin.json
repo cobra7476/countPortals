@@ -5,5 +5,7 @@
   "description": "count the number of portals in the current viewview",
   "author": "cobra7476",
   "entry": "src/Main.ts",
-  "minimize": false
+  "minimize": false,
+  "version": "1.0"
+
 }
