@@ -17,9 +17,23 @@ class countPortals implements Plugin.Class {
         )
 
     }
+
+    const toolbarGroup = $("<div>", {class: "leaflet-bar leaflet-control"})
+        .append(
+            $("<a>")
+                .addClass("leaflet-bar-part")
+                .css("background-image", 'url("' + myicon + '")')
+                .css("background-size", "24px")
+                .click(() => this.doCount())
+
+        );
+
+    const parent = $(".leaflet-top.leaflet-left", window.map.getContainer()).first();
+    parent.append(toolbarGroup);
+    
     doCount(): void {
         alert("Hello World");
-    }
+    }  
 
 }
 
