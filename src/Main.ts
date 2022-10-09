@@ -60,7 +60,7 @@ class countPortals implements Plugin.Class {
     }
 
     private findNearestPoint(pos: L.LatLng): L.LatLng | undefined {
-        const drawItem= <L.LayerGroup<any>>window.plugin.drawTools.drawnItems;
+        const drawnItems= <L.LayerGroup<any>>window.plugin.drawTools.drawnItems;
 
         let bestPosition;
         let minDistance = 1;
