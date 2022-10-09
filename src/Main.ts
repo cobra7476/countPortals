@@ -1,15 +1,24 @@
 import * as Plugin from "iitcpluginkit";
+import myicon from "./icon.svg";
 
 
 class countPortals implements Plugin.Class {
 
-    init() {
+    init() : void {
         console.log("countPortals " + VERSION);
 
         // eslint-disable-next-line unicorn/prefer-module
         require("./styles.css");
+        $("#toolbox").append(
+            $("<a>", {
+                text: "Count",
+                click: () => this.doCount()
+            })
+        )
 
-        alert("hello world");
+    }
+    doCount(): void {
+        alert("Hello World");
     }
 
 }
