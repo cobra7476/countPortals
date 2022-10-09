@@ -5,7 +5,6 @@ const HACK_RANGE = 40;
 class CountPortals implements Plugin.Class {
 
     private layer?: L.LayerGroup<any>;
-    private dialog?: JQuery;
 
     init(): void {
         console.log("CountPortals " + VERSION);
