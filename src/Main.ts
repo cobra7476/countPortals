@@ -40,7 +40,28 @@ class countPortals implements Plugin.Class {
             return;
         }
         const portals = this.findHackablePortals();
-        alert(`portal in hack range:${portals.length}`)
+        
+        let contents = "<table";
+        contents += `<tr><td>Total:</td><td>${portals.length}</td></tr>`;
+
+        const resPortals = portals.filter(p => p.options.team == TEAM_RES);
+        const enlPortals = portals.filter(p => p.options.team == TEAM_ENL);
+        contents += `<tr><td>RES</td><td>${resPortals.length}</td></tr>`;
+        contents += `<tr><td>ENL</td><td>${enlPortals.length}</td></tr>`;
+
+        for (let i = 8; i > 0; i--) {
+            const levelPortals = portals.filter(p => p.options.team != TEAM_NONE && p.options.data.level == i);
+            contents += `<tr><td>Level ${i}</td><td>${levelPortals.length}</td></tr>`;
+        }
+
+
+        contents += "</table>"
+
+        dialog({
+            id: "pathPortals",
+            title: "Portals on Path",
+            html: contents
+        });
     }
 
     private findHackablePortals():IITC.Portal[]{
