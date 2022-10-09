@@ -3,9 +3,11 @@ import * as Plugin from "iitcpluginkit";
 const HACK_RANGE = 40;
 
 class CountPortals implements Plugin.Class {
-
+    //deffinitions des variables privée
     private layer?: L.LayerGroup<any>;
+    private dialog?: JQuery;
 
+    //init
     init(): void {
         console.log("CountPortals " + VERSION);
 
@@ -14,6 +16,7 @@ class CountPortals implements Plugin.Class {
         this.createButtons();
     }
 
+    //actions
     private createButtons():void {
         $("#toolbox").append(
             $("<a>", {
@@ -36,12 +39,17 @@ class CountPortals implements Plugin.Class {
 
     private doCount(): void {
         if (!window.plugin.drawTools){
-            alert("drawtool is required");
+            alert("drawtool are required");
             return;
         }
         const portals = this.findHackablePortals();
+
+        this.updateDialog(portals);
+        this.drawPortals(portals);
+
+        window.addHook("pluginDrawTools", this.onDrawingChanged)
         
-        let contents = "<table";
+        let contents = "<table class='countTable></table>";
         contents += `<tr><td>Total:</td><td>${portals.length}</td></tr>`;
 
         const resPortals = portals.filter(p => p.options.team == TEAM_RES);
@@ -57,7 +65,7 @@ class CountPortals implements Plugin.Class {
 
         contents += "</table>"
 
-        dialog({
+        this.dialog = dialog({
             id: "pathPortals",
             title: "Portals on Path",
             html: contents,
@@ -103,13 +111,6 @@ class CountPortals implements Plugin.Class {
         });
     }
 
-    onDialogClose(): void {
-        if (this.layer) {
-            window.map.removeLayer(this.layer);
-            this.layer = undefined;
-        }
-    }
-
     private findNearestPoint(pos: L.LatLng): L.LatLng | undefined {
         const drawnItems= <L.LayerGroup<any>>window.plugin.drawTools.drawnItems;
 
@@ -134,7 +135,7 @@ class CountPortals implements Plugin.Class {
 
         return bestPosition;
     }
-
+    
     private closedPoint(a: L.LatLng, b: L.LatLng, x: L.LatLng): L.LatLng {
 
         const dx = b.lat - a.lat;
@@ -155,7 +156,50 @@ class CountPortals implements Plugin.Class {
         const dy = b.lng - a.lng;
         return dx * dx + dy * dy;
     }
+
+    //dialog
+    updateDialog(portals: IITC.Portal[]): void {
+        if (!this.dialog) return;
+
+
+        let contents = `<tr><td>Total:</td><td>${portals.length}</td></tr>`;
+        contents += `<tr class="sep"><td colspan="2"></td></tr>`;
+
+        const resPortals = portals.filter(p => p.options.team == TEAM_RES);
+        const enlPortals = portals.filter(p => p.options.team == TEAM_ENL);
+        contents += `<tr><td>RES</td><td>${resPortals.length}</td></tr>`;
+        contents += `<tr><td>ENL</td><td>${enlPortals.length}</td></tr>`;
+
+        contents += `<tr class="sep"><td colspan="2"></td></tr>`;
+
+        for (let i = 8; i > 0; i--) {
+            const levelPortals = portals.filter(p => p.options.team != TEAM_NONE && p.options.data.level == i);
+            contents += `<tr><td>Level ${i}</td><td>${levelPortals.length}</td></tr>`;
+        }
+
+        const table = this.dialog.find(".countTable");
+        table.html(contents);
+    }
+
     
+
+    onDialogClose(): void {
+        if (this.layer) {
+            window.map.removeLayer(this.layer);
+            this.layer = undefined;
+
+            this.dialog = undefined;
+
+            window.removeHook("pluginDrawTools", this.onDrawingChanged);
+        }
+    }
+
+    onDrawingChanged = (): void => {
+        const portals = this.findHackablePortals();
+        this.updateDialog(portals);
+        this.drawPortals(portals);
+    }
+   
 }
 
 /**
