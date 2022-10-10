@@ -5,6 +5,7 @@ const HACK_RANGE = 40;
 class CountPortals implements Plugin.Class {
 
     private layer?: L.LayerGroup<any>;
+    private dialog?: JQuery;
 
     init(): void {
         console.log("CountPortals " + VERSION);
@@ -14,16 +15,16 @@ class CountPortals implements Plugin.Class {
         this.createButtons();
     }
 
-    private createButtons():void {
+    private createButtons(): void {
         $("#toolbox").append(
             $("<a>", {
                 text: "Count",
                 click: () => this.doCount()
             })
-        );
+        )
 
 
-        const toolbarGroup = $("<div>", {class: "leaflet-bar leaflet-control"})
+        const toolbarGroup = $("<div>", { class: "leaflet-bar leaflet-control" })
             .append(
                 $("<a>", {
                     class: "mybutton leaflet-bar-part",
