@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "iitcpluginkit": "^1.7.1"
+  },
+  "license": "Unlicense",
+  "scripts": {
+    "build": "yarn build:dev",
+    "build:dev": "yarn ipk build:dev",
+    "build:prod": "yarn ipk build:prod",
+    "start": "yarn ipk fileserver",
+    "autobuild": "yarn ipk autobuild"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "eslint": "^8.26.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-unicorn": "^44.0.2"
+  }
+}
